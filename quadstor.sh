@@ -95,6 +95,7 @@ function install_quadstorvtl(){
 	# Install QuadstorVTL
 		echo
 		echo -e '\e[01;34m+++ Installing QUADStorVTL...\e[0m'
+		cd
 		git clone https://github.com/quadstor/quadstorvtl quadstorvtl
 		cd quadstorvtl
 		./installworld debian7
