@@ -26,13 +26,12 @@ function install_quadstor(){
 		./installworld debian7
 		echo -e '\e[01;37;42mQUADStor has been successfully installed!\e[0m'
 
-	#Start the quadstor service
+	#Remove the ietd file for quadstorvtl to work
 		echo
-		echo -e '\e[01;34m+++ Starting the Quadstor service...\e[0m'
+		echo -e '\e[01;34m+++ Removing the ietd file...\e[0m'
+		rm -f /quadstor/sbin/ietd
 		echo
-		service quadstor start
-		echo
-		echo -e '\e[01;37;42mThe Quadstor service has been successfully started!\e[0m'
+		echo -e '\e[01;37;42mThe ietd file has been successfully remove!\e[0m'
 }
 function secure_webui(){
 	# Creates the .htaccess file
@@ -92,6 +91,15 @@ EOA
 		service apache2 restart
 		echo -e '\e[01;37;42mThe apache2 service has been successfully restarted!\e[0m'
 }
+function install_quadstorvtl(){
+	# Install QuadstorVTL
+		echo
+		echo -e '\e[01;34m+++ Installing QUADStorVTL...\e[0m'
+		git clone https://github.com/quadstor/quadstorvtl quadstorvtl
+		cd quadstorvtl
+		./installworld debian7
+		echo -e '\e[01;37;42mQUADStorVTL has been successfully installed!\e[0m'
+}
 function doAll(){
 	# Calls Function 'install-quadstor'
 		echo
@@ -110,6 +118,14 @@ function doAll(){
 			secure_webui
 		fi
 
+	# Calls Function 'install-quadstorvtl'
+		echo
+		echo -e "\e[33m=== Install QUADStorVTL ? (y/n)\e[0m"
+		read yesno
+		if [ "$yesno" = "y" ]; then
+			install_quadstorvtl
+		fi
+
 	# Gets the IP of the Ubiquiti unifi controller
 		ipaddr=`hostname -I`
 		ipaddr=$(echo "$ipaddr" | tr -d ' ')
@@ -121,6 +137,7 @@ function doAll(){
 
            \e[01;37;42mWell done! You have successfully setup your MHVTL server! \e[0m
 
+             \e[31mPlease \e[31;4mREBOOT your machine\e[0m\e[31m. Then open your browser to:\e[0m
                                \e[01;37mhttps://$ipaddr\e[0m
 
 
